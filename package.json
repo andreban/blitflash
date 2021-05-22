@@ -1,0 +1,36 @@
+{
+  "name": "32blit-flash",
+  "version": "0.1.0",
+  "description": "A JavaScript implementation of the 32blit flash tools",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/lib",
+    "dist/index.d.ts",
+    "dist/index.js"
+  ],
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint-fix": "eslint \"src/**/*.ts\" --fix",
+    "build": "tsc -p .",
+    "test": "tsc -p . && jasmine --config=jasmine.json"
+  },
+  "keywords": [
+    "32blit",
+    "web-serial"
+  ],
+  "author": "Andre Cipriani Bandarra",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/jasmine": "^3.7.4",
+    "@types/w3c-web-serial": "^1.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
+    "eslint": "^7.27.0",
+    "jasmine": "^3.7.0",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "blitflash": "file:../"
+  }
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="js/main.bundle.js" defer></script>
+    <style>
+      html {
+        font-family: 'Roboto', sans-serif;
+        background-color: lightsteelblue;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      emoji-picker {
+        width: 90vw;
+        height: 40vh;
+        margin: 8px auto;
+      }
+      
+      h1 {
+        height: 56px;
+        margin: 0 0 16px 0;
+        padding: 8px 16px;
+        background-color: #789ac7;
+        box-sizing: border-box;
+        box-shadow: 0px 2px 4px #999999;
+        text-transform: uppercase;
+      }
+
+      canvas {
+        width: 25vh;
+        height: 25vh;
+        image-rendering: pixelated;
+        margin: 4px auto;
+      }
+
+      .content-wrapper {
+        padding: 0px 8px;
+        display: grid;
+      }
+
+
+      .buttons {
+        height: 30px;
+      }
+
+      .button {
+        width: 150px;
+        height: 30px;
+        text-transform: uppercase;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>32Blit Flasher</h1>
+    <div class="content-wrapper">
+      <div class="buttons">
+        <button id="connect" class="button">Connect</button>
+        <button id="disconnect" disabled class="button">Disconnect</button>
+        <button id="reset" disabled class="button">Reset</button>
+        <button id="status" disabled class="button">Status</button>
+        <button id="list" disabled class="button">List</button>
+      </div>
+      <h2>Status:</h2>
+        <div id="status_text"></div>
+
+      <h2>List:</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Author</th>
+            <th>Date</th>
+            <th>Version</th>
+          </tr>
+        </thead>
+        <tbody id="list-content">
+        </tbody>
+      </table>
+  </div>
+  </body>
+</html>

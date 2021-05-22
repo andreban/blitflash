@@ -1,0 +1,27 @@
+{
+  "name": "32blit-flash-demo",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "lint": "tslint \"src/**/*.ts\"",
+    "lint-fix": "tslint \"src/**/*.ts\" --fix",
+    "build": "tsc",
+    "package": "webpack",
+    "serve": "serve"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "blitflash": "file:../"
+  },
+  "devDependencies": {
+    "serve": "^11.3.2",
+    "ts-loader": "^9.2.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.2.4",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0"
+  }
+}
