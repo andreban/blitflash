@@ -1,4 +1,4 @@
-import {ReadBuffer} from './ReadBuffer';
+import {RandomAccessReader} from './RandomAccessReader';
 
 export class BlitImage {
   constructor(
@@ -7,26 +7,26 @@ export class BlitImage {
     readonly width: number,
     readonly height: number,
     readonly format: number,
-    readonly pallete: Uint8Array,
-    readonly pixels: Uint8Array,
+    readonly pallete: ArrayBuffer,
+    readonly pixels: ArrayBuffer,
   ) {
 
   }
 
-  static async parse(readBuffer: ReadBuffer): Promise<BlitImage> {
-    const header = await readBuffer.readString(6);
+  static parse(reader: RandomAccessReader): BlitImage {
+    const header = reader.readString(6);
     if (header !== 'SPRITE') {
       throw new Error(`Invalid header for BlitImage: ${header}`);
     }
-    const type = await readBuffer.readString(2);
+    const type = reader.readString(2);
 
-    const dataLength = await readBuffer.readUint32(true);
-    const width = await readBuffer.readUint16(true);
-    const height = await readBuffer.readUint16(true);
-    const format = await readBuffer.readUint8();
-    const palleteLength = await readBuffer.readUint8();
-    const pallete = await readBuffer.read(palleteLength * 4);
-    const pixels = await readBuffer.read(dataLength - 18 - palleteLength * 4);
+    const dataLength = reader.readUint32(true);
+    const width = reader.readUint16(true);
+    const height = reader.readUint16(true);
+    const format = reader.readUint8();
+    const palleteLength = reader.readUint8();
+    const pallete = reader.read(palleteLength * 4);
+    const pixels = reader.read(dataLength - 18 - palleteLength * 4);
     return new BlitImage(type, dataLength, width, height, format, pallete, pixels);
   }
 }
@@ -52,28 +52,37 @@ export class BlitMetaStandalone {
   ) {
   }
 
-  static async parse(readBuffer: ReadBuffer, size: number): Promise<BlitMetaStandalone> {
-    const checksum = await readBuffer.readUint32(true); //4
-    const date = await readBuffer.readString(16); //20
-    const title = await readBuffer.readString(25); // 45
-    const description = await readBuffer.readString(129); // 174
-    const version = await readBuffer.readString(17); // 191
-    const author = await readBuffer.readString(17); // 208
-    const blitType = await readBuffer.readString(8); // 216
-    if (blitType !== 'BLITTYPE') {
-      await readBuffer.read(size - 216);
-      return new BlitMetaStandalone(checksum, date, title, description, version, author, blitType);
-    }
-    const category = await readBuffer.readString(17); // 233
-    const url = await readBuffer.readString(129); // 362
-    const filetypesLength = await readBuffer.readUint8(); //363
-    const filetypes: string[] = [];
-    for (let i = 0; i < filetypesLength; i++) {
-      filetypes.push(await readBuffer.readString(5));
+  static parse(buffer: ArrayBuffer): BlitMetaStandalone {
+    const reader = new RandomAccessReader(buffer);
+
+    const checksum = reader.readUint32(true);
+    const date = reader.readString(16);
+    const title = reader.readString(25);
+    const description = reader.readString(129);
+    const version = reader.readString(17);
+    const author = reader.readString(17);
+
+    let category;
+    let url;
+    let filetypes;
+
+    const pos = reader.getPos();
+    const blitType = reader.readString(8);
+    if (blitType === 'BLITTYPE') {
+      category = reader.readString(17);
+      url = reader.readString(129);
+      const filetypesLength = reader.readUint8();
+
+      filetypes = [];
+      for (let i = 0; i < filetypesLength; i++) {
+        filetypes.push(reader.readString(5));
+      }
+    } else {
+      reader.setPos(pos);
     }
 
-    const icon = await BlitImage.parse(readBuffer);
-    const splash = await BlitImage.parse(readBuffer);
+    const icon = BlitImage.parse(reader);
+    const splash = BlitImage.parse(reader);
 
     return new BlitMetaStandalone(
       checksum,

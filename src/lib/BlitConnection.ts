@@ -69,7 +69,7 @@ export class BlitConnection {
       let meta: BlitMetaStandalone | undefined;
       if (metaSize > 0) {
         size = size + metaSize + 10;
-        meta = await BlitMetaStandalone.parse(this.readBuffer, metaSize);
+        meta = BlitMetaStandalone.parse((await this.readBuffer.read(metaSize)).buffer);
       }
 
       records.push({
