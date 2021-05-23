@@ -35,6 +35,7 @@ export class BlitFlasher {
   }
 
   async sendFile(data: ArrayBuffer, drive: BlitDrive, filename: string, directory = ''): Promise<void> {
+    await this.reset();
     return this.connection!.sendFile(data, drive, filename, directory);
   }
 

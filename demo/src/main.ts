@@ -90,6 +90,7 @@ snake.addEventListener('click', async() => {
   const arrayBuffer = await response.arrayBuffer();
   console.log(`Received arrayBuffer with size ${arrayBuffer.byteLength}`);
   try {
+    // await blitflash.sendFile(arrayBuffer, 'flash', 'snake.blit');
     await blitflash.sendFile(arrayBuffer, 'sd', 'snake.blit', '/');
     console.log('snake.blit flashed successfully');
   } catch(e) {

@@ -93,7 +93,7 @@ export class BlitConnection {
       command = `32BLSAVE${directory}/${filename}\0${filesize}\0`;
     } else {
       console.log(`Flashing ${filename} (${filesize} bytes)`);
-      command = `32BLPRO${filename}\0${filesize}\0`;
+      command = `32BLPROG${filename}\0${filesize}\0`;
     }
 
     await this.write(command);
@@ -105,6 +105,7 @@ export class BlitConnection {
       this.writer.write(stream.slice(written, end));
       written = end;
     }
+    await this.writer.ready;
 
     console.log(`Wrote ${written} bytes`);
     const response = await this.readBuffer.readString(8);
