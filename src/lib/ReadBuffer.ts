@@ -31,6 +31,11 @@ export class ReadBuffer {
     });
   }
 
+  async readUint8(): Promise<number> {
+    const data = await this.read(1);
+    return new DataView(data.buffer).getUint8(0);
+  }
+
   async readUint16(littleEndian?: boolean): Promise<number> {
     const data = await this.read(2);
     return new DataView(data.buffer).getUint16(0, littleEndian);
@@ -43,8 +48,11 @@ export class ReadBuffer {
 
   async readString(size: number): Promise<string> {
     const data = await this.read(size);
-    const zero = data.findIndex((value) => value === 0);
-    return this.decoder.decode(data.slice(0, zero));
+    let end = data.findIndex((value) => value === 0);
+    if (end === -1) {
+      end = size - 1;
+    }
+    return this.decoder.decode(data.slice(0, end + 1));
   }
 
   public append(data: Uint8Array): void {

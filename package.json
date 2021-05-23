@@ -12,6 +12,7 @@
   "scripts": {
     "lint": "eslint \"src/**/*.ts\"",
     "lint-fix": "eslint \"src/**/*.ts\" --fix",
+    "dev": "tsc --watch -p .",
     "build": "tsc -p .",
     "test": "tsc -p . && jasmine --config=jasmine.json"
   },
