@@ -5,11 +5,12 @@ const disconnect = document.querySelector('#disconnect')! as HTMLButtonElement;
 const status = document.querySelector('#status')! as HTMLButtonElement;
 const reset = document.querySelector('#reset')! as HTMLButtonElement;
 const list = document.querySelector('#list')! as HTMLButtonElement;
+const snake = document.querySelector('#snake')! as HTMLButtonElement;
 
 const statusText = document.querySelector('#status_text')! as HTMLDivElement;
 const listContent = document.querySelector('#list-content')!;
 
-let blitflash: BlitFlasher;
+let blitflash: BlitFlasher | null = null;
 
 connect.addEventListener('click', async () => {
   const port = await navigator.serial.requestPort();
@@ -20,20 +21,27 @@ connect.addEventListener('click', async () => {
   status.disabled = false;
   reset.disabled = false;
   list.disabled = false;
+  snake.disabled = false;
   const blitStatus = await blitflash!.status();
   statusText.innerText = blitStatus;
 });
 
 disconnect.addEventListener('click', async () => {
-  await blitflash.close();
+  await blitflash?.close();
+  blitflash = null;
   connect.disabled = false;
   disconnect.disabled = true;
   status.disabled = true;
   reset.disabled = true;
   list.disabled = true;
+  snake.disabled = true;
 });
 
 reset.addEventListener('click', async() => {
+  if (blitflash === null) {
+    console.error('Not Connected');
+    return;
+  }
   await blitflash.reset();
   const status = await blitflash!.status();
   statusText.innerText = status;
@@ -71,4 +79,20 @@ list.addEventListener('click', async () => {
 
      listContent.appendChild(tr);
   });
+});
+
+snake.addEventListener('click', async() => {
+  if (blitflash === null) {
+    console.error('Not Connected');
+    return;
+  }
+  const response = await fetch('snake.blit');
+  const arrayBuffer = await response.arrayBuffer();
+  console.log(`Received arrayBuffer with size ${arrayBuffer.byteLength}`);
+  try {
+    await blitflash.sendFile(arrayBuffer, 'sd', 'snake.blit', '/');
+    console.log('snake.blit flashed successfully');
+  } catch(e) {
+    console.error('Error uploading blit file', e);
+  }
 });

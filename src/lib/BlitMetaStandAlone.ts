@@ -13,6 +13,18 @@ export class BlitImage {
 
   }
 
+  // bitLength(): number {
+  //   if (this.type === 'RW') {
+  //     return 8;
+  //   } else {
+  //     //?Math.max(1, this.pallete)
+  //   }
+  // }
+
+  numPixels(): number {
+    return this.width * this.height;
+  }
+
   static parse(reader: RandomAccessReader): BlitImage {
     const header = reader.readString(6);
     if (header !== 'SPRITE') {
@@ -24,7 +36,11 @@ export class BlitImage {
     const width = reader.readUint16(true);
     const height = reader.readUint16(true);
     const format = reader.readUint8();
-    const palleteLength = reader.readUint8();
+    let palleteLength = reader.readUint8();
+    // See https://github.com/32blit/32blit-tools/blob/a520a742450c8da97f88f6c0ce74ac0038093e02/src/ttblit/core/struct.py#L24-L33
+    if (palleteLength === 0) {
+      palleteLength = 256;
+    }
     const pallete = reader.read(palleteLength * 4);
     const pixels = reader.read(dataLength - 18 - palleteLength * 4);
     return new BlitImage(type, dataLength, width, height, format, pallete, pixels);

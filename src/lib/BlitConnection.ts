@@ -1,6 +1,8 @@
 import {BlitMetaStandalone} from './BlitMetaStandAlone';
 import {ReadBuffer} from './ReadBuffer';
 
+export type BlitDrive = 'sd' | 'flash';
+
 export type BlitRecord = {
   offset: number;
   size: number;
@@ -80,5 +82,34 @@ export class BlitConnection {
       offset = await this.readBuffer.readUint32(true);
     }
     return records;
+  }
+
+  async sendFile(data: ArrayBuffer, drive: BlitDrive, filename: string, directory = ''): Promise<void> {
+    const filesize = data.byteLength;
+    const chunkSize = 64;
+    let command;
+    if (drive === 'sd') {
+      console.log(`Saving ${filename} (${filesize} bytes) as in ${directory}.`);
+      command = `32BLSAVE${directory}/${filename}\0${filesize}\0`;
+    } else {
+      console.log(`Flashing ${filename} (${filesize} bytes)`);
+      command = `32BLPRO${filename}\0${filesize}\0`;
+    }
+
+    await this.write(command);
+    let written = 0;
+    const stream = new Uint8Array(data);
+    while (written < filesize) {
+      await this.writer.ready;
+      const end = Math.min(written + chunkSize, filesize);
+      this.writer.write(stream.slice(written, end));
+      written = end;
+    }
+
+    console.log(`Wrote ${written} bytes`);
+    const response = await this.readBuffer.readString(8);
+    if (response !== '32BL__OK') {
+      throw new Error(`Failed to send file with result ${response}.`)
+    }
   }
 }

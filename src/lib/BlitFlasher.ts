@@ -1,4 +1,4 @@
-import {BlitConnection, BlitRecord} from './BlitConnection';
+import {BlitConnection, BlitRecord, BlitDrive} from './BlitConnection';
 import {sleep} from './util';
 
 export class BlitFlasher {
@@ -32,6 +32,10 @@ export class BlitFlasher {
 
   async list(): Promise<BlitRecord[]> {
     return this.connection!.list();
+  }
+
+  async sendFile(data: ArrayBuffer, drive: BlitDrive, filename: string, directory = ''): Promise<void> {
+    return this.connection!.sendFile(data, drive, filename, directory);
   }
 
   async reset(): Promise<void> {
