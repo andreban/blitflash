@@ -55,12 +55,20 @@ reset.addEventListener('click', async() => {
 });
 
 status.addEventListener('click', async () => {
+  if (blitflash === null) {
+    console.error('Not Connected');
+    return;
+  }
   const status = await blitflash!.status();
   statusText.innerText = status;
 });
 
 list.addEventListener('click', async () => {
-  const blitRecords = await blitflash!.list();
+  if (blitflash === null) {
+    console.error('Not Connected');
+    return;
+  }
+  const blitRecords = await blitflash.list();
   listContent.innerHTML = '';
   blitRecords.forEach((record) => {
      const tr = document.createElement('tr');

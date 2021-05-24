@@ -4,11 +4,14 @@ import {sleep} from './util';
 const BLIT_DEVICE_FILTER = {usbVendorId: 0x0483, usbProductId: 0x5740};
 const BLIT_DEVICE_FILTERS = [BLIT_DEVICE_FILTER];
 
+export type BlitFlasherOptions = {
+  debug: boolean;
+};
+
 export class BlitFlasher {
-  private port: SerialPort;
   private connection?: BlitConnection;
 
-  constructor(port: SerialPort) {
+  constructor(private port: SerialPort, private options: BlitFlasherOptions = {debug: false}) {
     this.port = port;
   }
 
@@ -25,6 +28,7 @@ export class BlitFlasher {
     this.connection = new BlitConnection(
       this.port.readable!.getReader(),
       this.port.writable!.getWriter(),
+      {debug: this.options.debug},
     );
   }
 
