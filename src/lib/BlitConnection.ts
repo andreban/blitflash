@@ -84,16 +84,16 @@ export class BlitConnection {
     return records;
   }
 
-  async sendFile(data: ArrayBuffer, drive: BlitDrive, filename: string, directory = ''): Promise<void> {
+  async sendFile(data: Uint8Array, drive: BlitDrive, filename: string, directory = ''): Promise<void> {
     const filesize = data.byteLength;
-    const chunkSize = 64;
+    const chunkSize = 1024;
     let command;
     if (drive === 'sd') {
       console.log(`Saving ${filename} (${filesize} bytes) as in ${directory}.`);
-      command = `32BLSAVE${directory}/${filename}\0${filesize}\0`;
+      command = `32BLSAVE${directory}/${filename}\x00${filesize}\x00`;
     } else {
       console.log(`Flashing ${filename} (${filesize} bytes)`);
-      command = `32BLPROG${filename}\0${filesize}\0`;
+      command = `32BLPROG${filename}\x00${filesize}\x00`;
     }
 
     await this.write(command);
@@ -107,7 +107,14 @@ export class BlitConnection {
     }
     await this.writer.ready;
 
-    console.log(`Wrote ${written} bytes`);
+    // const header = this.encoder.encode(command);
+    // const payload = new Uint8Array(new ArrayBuffer(header.byteLength + data.byteLength));
+    // payload.set(header, 0);
+    // payload.set(data, header.byteLength);
+    // await this.writer.write(payload);
+    // await this.writer.desiredSize
+
+    console.log(`Wrote ${data.byteLength} bytes`);
     const response = await this.readBuffer.readString(8);
     if (response !== '32BL__OK') {
       throw new Error(`Failed to send file with result ${response}.`)

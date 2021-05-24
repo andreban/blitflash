@@ -5,7 +5,8 @@ const disconnect = document.querySelector('#disconnect')! as HTMLButtonElement;
 const status = document.querySelector('#status')! as HTMLButtonElement;
 const reset = document.querySelector('#reset')! as HTMLButtonElement;
 const list = document.querySelector('#list')! as HTMLButtonElement;
-const snake = document.querySelector('#snake')! as HTMLButtonElement;
+const flash = document.querySelector('#flash')! as HTMLButtonElement;
+const sd = document.querySelector('#sd')! as HTMLButtonElement;
 
 const statusText = document.querySelector('#status_text')! as HTMLDivElement;
 const listContent = document.querySelector('#list-content')!;
@@ -13,7 +14,10 @@ const listContent = document.querySelector('#list-content')!;
 let blitflash: BlitFlasher | null = null;
 
 connect.addEventListener('click', async () => {
-  const port = await navigator.serial.requestPort();
+  const filters = [
+    {usbVendorId: 0x0483, usbProductId: 0x5740},
+  ];
+  const port = await navigator.serial.requestPort({filters});
   blitflash = new BlitFlasher(port);
   await blitflash.open();
   connect.disabled = true;
@@ -21,7 +25,8 @@ connect.addEventListener('click', async () => {
   status.disabled = false;
   reset.disabled = false;
   list.disabled = false;
-  snake.disabled = false;
+  flash.disabled = false;
+  sd.disabled = false;
   const blitStatus = await blitflash!.status();
   statusText.innerText = blitStatus;
 });
@@ -34,7 +39,8 @@ disconnect.addEventListener('click', async () => {
   status.disabled = true;
   reset.disabled = true;
   list.disabled = true;
-  snake.disabled = true;
+  flash.disabled = true;
+  sd.disabled = true;
 });
 
 reset.addEventListener('click', async() => {
@@ -54,6 +60,7 @@ status.addEventListener('click', async () => {
 
 list.addEventListener('click', async () => {
   const blitRecords = await blitflash!.list();
+  listContent.innerHTML = '';
   blitRecords.forEach((record) => {
      const tr = document.createElement('tr');
 
@@ -81,18 +88,33 @@ list.addEventListener('click', async () => {
   });
 });
 
-snake.addEventListener('click', async() => {
+flash.addEventListener('click', async() => {
   if (blitflash === null) {
     console.error('Not Connected');
     return;
   }
   const response = await fetch('snake.blit');
-  const arrayBuffer = await response.arrayBuffer();
+  const arrayBuffer = new Uint8Array(await response.arrayBuffer());
   console.log(`Received arrayBuffer with size ${arrayBuffer.byteLength}`);
   try {
-    // await blitflash.sendFile(arrayBuffer, 'flash', 'snake.blit');
+    await blitflash.sendFile(arrayBuffer, 'flash', 'snake.blit');
+    alert('snake.blit flashed successfully')
+  } catch(e) {
+    console.error('Error uploading blit file', e);
+  }
+});
+
+sd.addEventListener('click', async() => {
+  if (blitflash === null) {
+    console.error('Not Connected');
+    return;
+  }
+  const response = await fetch('snake.blit');
+  const arrayBuffer = new Uint8Array(await response.arrayBuffer());
+  console.log(`Received arrayBuffer with size ${arrayBuffer.byteLength}`);
+  try {
     await blitflash.sendFile(arrayBuffer, 'sd', 'snake.blit', '/');
-    console.log('snake.blit flashed successfully');
+    alert('snake.blit flashed successfully')
   } catch(e) {
     console.error('Error uploading blit file', e);
   }

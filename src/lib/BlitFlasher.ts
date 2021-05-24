@@ -13,7 +13,7 @@ export class BlitFlasher {
     await this.port.open({
       baudRate: 115200,
       dataBits: 8,
-      stopBits: 1
+      stopBits: 1,
     });
 
     this.connection = new BlitConnection(
@@ -23,7 +23,8 @@ export class BlitFlasher {
   }
 
   async close(): Promise<void> {
-    this.connection?.close();
+    await this.connection?.close();
+    await this.port?.close();
   }
 
   async status(): Promise<string> {
@@ -34,8 +35,7 @@ export class BlitFlasher {
     return this.connection!.list();
   }
 
-  async sendFile(data: ArrayBuffer, drive: BlitDrive, filename: string, directory = ''): Promise<void> {
-    await this.reset();
+  async sendFile(data: Uint8Array, drive: BlitDrive, filename: string, directory = ''): Promise<void> {
     return this.connection!.sendFile(data, drive, filename, directory);
   }
 
