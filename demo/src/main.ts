@@ -11,13 +11,14 @@ const sd = document.querySelector('#sd')! as HTMLButtonElement;
 const statusText = document.querySelector('#status_text')! as HTMLDivElement;
 const listContent = document.querySelector('#list-content')!;
 
+if (BlitFlasher.supportsWebSerial()) {
+  connect.disabled = false;
+}
+
 let blitflash: BlitFlasher | null = null;
 
 connect.addEventListener('click', async () => {
-  const filters = [
-    {usbVendorId: 0x0483, usbProductId: 0x5740},
-  ];
-  const port = await navigator.serial.requestPort({filters});
+  const port = await BlitFlasher.getOrRequestPort();
   blitflash = new BlitFlasher(port);
   await blitflash.open();
   connect.disabled = true;
