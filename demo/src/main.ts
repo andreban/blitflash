@@ -78,6 +78,17 @@ list.addEventListener('click', async () => {
      tr.appendChild(td);
 
      td = document.createElement('td');
+     const imageSrc = record.meta?.splash?.asDataUrl();
+     if (imageSrc) {
+      const img = document.createElement('img');
+      img.src = imageSrc;
+      td.appendChild(img);
+     } else {
+      td.innerText = 'N/A';
+     }
+     tr.appendChild(td);
+
+     td = document.createElement('td');
      td.innerText = record.meta?.description || '';
      tr.appendChild(td);
 
