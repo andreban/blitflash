@@ -1,6 +1,6 @@
 {
   "name": "blitflash",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A JavaScript implementation of the 32blit flash tools",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
