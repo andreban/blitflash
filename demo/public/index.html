@@ -48,11 +48,12 @@
 
 
       .buttons {
-        height: 30px;
+        min-height: 30px;
       }
 
       .button {
-        width: 150px;
+        margin: 4px 4px;
+        min-width: 150px;
         height: 30px;
         text-transform: uppercase;
       }
@@ -66,12 +67,13 @@
     <h1>32Blit Flasher</h1>
     <div class="content-wrapper">
       <div class="buttons">
-        <button id="connect" class="button">Connect</button>
+        <button id="connect" disabled class="button">Connect</button>
         <button id="disconnect" disabled class="button">Disconnect</button>
         <button id="reset" disabled class="button">Reset</button>
         <button id="status" disabled class="button">Status</button>
         <button id="list" disabled class="button">List</button>
-        <button id="snake" disabled class="button">Flash Snake</button>
+        <button id="flash" disabled class="button">Send to Flash</button>
+        <button id="sd" disabled class="button">Send to SDCard</button>
       </div>
       <h2>Status:</h2>
         <div id="status_text"></div>
