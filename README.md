@@ -1,7 +1,7 @@
 Blitflash
 =========
 
-[![Node CI Status](https://github.com/andreban/bubblewrap/blitflash/Node%20CI/badge.svg)](https://github.com/GoogleChromeLabs/bubblewrap/actions?query=workflow%3A%22Node+CI%22)
+[![Node CI Status](https://github.com/andreban/bubblewrap/blitflash/Node%20CI/badge.svg)](https://github.com/andreban/blitflash/actions?query=workflow%3A%22Node+CI%22)
 
 # Demo
 
