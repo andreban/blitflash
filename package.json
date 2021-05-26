@@ -1,5 +1,5 @@
 {
-  "name": "32blit-flash",
+  "name": "blitflash",
   "version": "0.1.0",
   "description": "A JavaScript implementation of the 32blit flash tools",
   "main": "dist/index.js",
