@@ -3,6 +3,15 @@ Blitflash
 
 [![Node CI Status](https://github.com/andreban/blitflash/workflows/Node%20CI/badge.svg)](https://github.com/andreban/blitflash/actions?query=workflow%3A%22Node+CI%22)
 
+
+# Installation
+
+Install from NPM:
+
+```
+npm install --save blitflash
+```
+
 # Demo
 
 Check out the demo at https://andreban.github.io/blitflash/.
