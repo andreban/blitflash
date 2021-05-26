@@ -7,7 +7,7 @@ export class BlitImage {
     readonly width: number,
     readonly height: number,
     readonly format: number,
-    readonly pallete: ArrayBuffer,
+    readonly palette: ArrayBuffer,
     readonly pixels: ArrayBuffer,
   ) {
 
@@ -40,7 +40,7 @@ export class BlitImage {
       return null;
     }
 
-    const palette = new Uint8Array(this.pallete);
+    const palette = new Uint8Array(this.palette);
     const bytes = new Uint8Array(this.pixels);
     const pixels = new Uint8Array(new ArrayBuffer(this.width * this.height * 4));
 
@@ -138,14 +138,14 @@ export class BlitImage {
     const width = reader.readUint16(true);
     const height = reader.readUint16(true);
     const format = reader.readUint8();
-    let palleteLength = reader.readUint8();
+    let paletteLength = reader.readUint8();
     // See https://github.com/32blit/32blit-tools/blob/a520a742450c8da97f88f6c0ce74ac0038093e02/src/ttblit/core/struct.py#L24-L33
-    if (palleteLength === 0) {
-      palleteLength = 256;
+    if (paletteLength === 0) {
+      paletteLength = 256;
     }
-    const pallete = reader.read(palleteLength * 4);
-    const pixels = reader.read(dataLength - 18 - palleteLength * 4);
-    return new BlitImage(type, dataLength, width, height, format, pallete, pixels);
+    const palette = reader.read(paletteLength * 4);
+    const pixels = reader.read(dataLength - 18 - paletteLength * 4);
+    return new BlitImage(type, dataLength, width, height, format, palette, pixels);
   }
 }
 
