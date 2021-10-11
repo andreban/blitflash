@@ -47,9 +47,9 @@ export class RandomAccessReader {
     const data = new Uint8Array(this.read(length));
     let end = data.findIndex((value) => value === 0);
     if (end === -1) {
-      end = length - 1;
+      end = length;
     }
-    return this.textdecoder.decode(data.slice(0, end + 1));
+    return this.textdecoder.decode(data.slice(0, end));
   }
 
   getPos(): number {
