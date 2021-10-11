@@ -1,2 +1,3 @@
 import {BlitFlasher} from './lib/BlitFlasher';
-export {BlitFlasher};
+import {BlitMetaStandalone as BlitMetadata, BlitImage} from './lib/BlitMeta';
+export {BlitFlasher, BlitImage, BlitMetadata};
